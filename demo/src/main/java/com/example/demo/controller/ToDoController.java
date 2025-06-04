@@ -10,12 +10,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.example.demo.model.ToDo;
 import com.example.demo.service.ToDoService;
 
 
 @Controller
+@SessionAttributes("username")
 public class ToDoController {
 	
 	@Autowired
@@ -43,7 +45,7 @@ public class ToDoController {
 			return "AddToDo"; // Just stay on the same page / url
 		}
 		
-		todoService.addToDo(todo.getUserName(), todo.getTaskName(), todo.getDescription(), todo.getDate(), todo.isDone());
+		todoService.addToDo((String)model.get("username"), todo.getTaskName(), todo.getDescription(), todo.getDate(), todo.isDone());
 		return "redirect:todo-list";
 	}
 
