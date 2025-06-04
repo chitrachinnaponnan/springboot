@@ -3,10 +3,13 @@ package com.example.demo.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.ToDo;
+
+import jakarta.persistence.criteria.Predicate;
 
 
 
@@ -32,5 +35,11 @@ public class ToDoService {
 		todoList.add(new ToDo(++counter, username, taskname, description, date, done));
 	}
 	
+	
+	public void delete(int id) {
+		ToDo todoObj =  todoList.stream().filter(todo->todo.getId() == id).findFirst().get();
+		todoList.remove(todoObj);
+		
+	}
 }
 	

@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.example.demo.model.ToDo;
@@ -46,6 +47,14 @@ public class ToDoController {
 		}
 		
 		todoService.addToDo((String)model.get("username"), todo.getTaskName(), todo.getDescription(), todo.getDate(), todo.isDone());
+		return "redirect:todo-list";
+	}
+	
+	@RequestMapping(value = "delete-todo",method=RequestMethod.GET)
+	public String delete(@RequestParam int id) {
+		
+		todoService.delete(id);
+		
 		return "redirect:todo-list";
 	}
 
