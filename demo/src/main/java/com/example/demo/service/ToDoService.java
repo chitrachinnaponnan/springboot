@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,21 @@ public class ToDoService {
 	public void delete(int id) {
 		ToDo todoObj =  todoList.stream().filter(todo->todo.getId() == id).findFirst().get();
 		todoList.remove(todoObj);
+	}
+	
+	public ToDo getById(int id) {
+		ToDo todoObj =  todoList.stream().filter(todo->todo.getId() == id).findFirst().get();
+		return todoObj;
+	}
+	
+	public void updateToDo(ToDo todo) {
 		
+		int index = IntStream.range(0, todoList.size())
+                .filter(i -> todoList.get(i).getId() == todo.getId()) // Filter by ID
+                .findFirst() // Get the first matching index
+                .orElse(-1); // Return -1 if not found		
+
+		todoList.set(index, todo);
 	}
 }
 	
