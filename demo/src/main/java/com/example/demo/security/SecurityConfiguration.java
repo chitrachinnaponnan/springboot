@@ -20,17 +20,15 @@ public class SecurityConfiguration {
 		
 		http
         .authorizeHttpRequests(auth->
-                auth
-                        .requestMatchers("/**").permitAll()   // give any of your 'get' request endpoint
-                        .anyRequest().authenticated())  // All other requests require authentication
+                auth.anyRequest().authenticated());  // All other requests require authentication
 
-        .csrf(csrfConfig->  // Disable CSRF for simplicity, not recommended for production
-                csrfConfig
-                        .disable())
-        .formLogin(Customizer.withDefaults())  // Enable form login here I use default login
-
-        .logout(Customizer.withDefaults());  // Enable logout
-
+      
+//        http.formLogin(Customizer.withDefaults());  // Enable form login here I use default login
+		http.formLogin(form -> form.defaultSuccessUrl("/todo-list", true));
+		http.csrf(csrf -> csrf.disable());
+		http.headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()));
+		
+      
 		return http.build();   
    
 	}
@@ -44,8 +42,6 @@ public class SecurityConfiguration {
                 .password(passwordEncoder().encode("user"))   // Replace <UserPassword> with the actual password
                 .roles("USER")
                 .build();
-
-      
 
         return new InMemoryUserDetailsManager(user);
 
