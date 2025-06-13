@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.example.demo.model.ToDo;
+import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.ToDoService;
 
 
@@ -23,6 +24,9 @@ public class ToDoController {
 	
 	@Autowired
 	private ToDoService todoService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
 	
 	
 	@RequestMapping("/todo-list")
@@ -46,7 +50,9 @@ public class ToDoController {
 			return "AddToDo"; // Just stay on the same page / url
 		}
 		
-		todoService.addToDo((String)model.get("username"), todo.getTaskName(), todo.getDescription(), todo.getDate(), todo.isDone());
+		
+		String username = authenticationService.getUserName();
+		todoService.addToDo(username, todo.getTaskName(), todo.getDescription(), todo.getDate(), todo.isDone());
 		return "redirect:todo-list";
 	}
 	
@@ -73,10 +79,13 @@ public class ToDoController {
 		if (result.hasErrors()) {
 			return "AddToDo"; // Just stay on the same page / url
 		}
-		String username = (String)model.get("username");
+		String username = authenticationService.getUserName();
+		
 		todo.setUserName(username);
 		todoService.updateToDo(todo);
 		return "redirect:todo-list";
 	}
+	
+	
 	
 }
