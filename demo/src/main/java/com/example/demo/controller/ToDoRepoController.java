@@ -16,23 +16,23 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.example.demo.model.ToDo;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.ToDoRepoService;
-import com.example.demo.service.ToDoService;
 
 
-//@Controller
+@Controller
 @SessionAttributes("username")
-public class ToDoController {
+public class ToDoRepoController {
 	
-	@Autowired
-	private ToDoRepoService todoRepoService;
 	
 	@Autowired
 	AuthenticationService authenticationService;
 	
+	@Autowired
+	ToDoRepoService toDoRepoService;
+	
 	
 	@RequestMapping("/todo-list")
 	public String getToDo(ModelMap model) {
-		List<ToDo> todos = todoRepoService.getToDo();
+		List<ToDo> todos = toDoRepoService.getToDo();
 		model.addAttribute("todos", todos);
 		return "ToDoList";
 	}
@@ -54,14 +54,14 @@ public class ToDoController {
 		
 		String username = authenticationService.getUserName();
 		todo.setUserName(username);
-		todoRepoService.addToDo(todo);
+		toDoRepoService.addToDo(todo);
 		return "redirect:todo-list";
 	}
 	
 	@RequestMapping(value = "/delete-todo",method=RequestMethod.GET)
 	public String delete(@RequestParam int id) {
 		
-		todoRepoService.delete(id);
+		toDoRepoService.delete(id);
 		
 		return "redirect:todo-list";
 	}
@@ -69,7 +69,7 @@ public class ToDoController {
 	@RequestMapping(value = "/update-todo",method=RequestMethod.GET)
 	public String getUpdateToDoPage(@RequestParam int id,ModelMap model) {
 		
-		ToDo  todo = todoRepoService.getById(id);
+		ToDo  todo = toDoRepoService.getById(id);
 		model.put("todo", todo);
 
 		return "AddToDo";
@@ -84,7 +84,7 @@ public class ToDoController {
 		String username = authenticationService.getUserName();
 		
 		todo.setUserName(username);
-		todoRepoService.updateToDo(todo);
+		toDoRepoService.updateToDo(todo);
 		return "redirect:todo-list";
 	}
 	
