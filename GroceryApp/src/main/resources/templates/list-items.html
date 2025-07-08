@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grocery List</title>
+</head>
+<body>
+    <h2>Grocery Items</h2>
+    <!-- Add Item Button -->
+    <a th:href="@{/items/new}">
+        <button type="button">Add Item</button>
+    </a>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.id}">1</td>
+            <td th:text="${item.name}">Rice</td>
+            <td th:text="${item.quantity}">2</td>
+        </tr>
+    </table>
+</body>
+</html>
