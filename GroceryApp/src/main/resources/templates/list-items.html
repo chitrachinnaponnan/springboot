@@ -1,38 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<title>Grocery List</title>
+    <title>Grocery List</title>
+    <style>
+        .active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
 </head>
-
 <body>
-	<h2>Grocery Items</h2>
-	<!-- Add Item Button -->
-	<a th:href="@{/items/new}">
-		<button type="button">Add Item</button>
-	</a>
 
-	<table border="1">
-		<tr>
-			<th>Name</th>
-			<th>Quantity</th>
-			<th>Actions</th>
-		</tr>
-		<tr th:each="item : ${items}">
-			<td th:text="${item.name}"></td>
-			<td th:text="${item.quantity}"></td>
+    <h2>Grocery Items</h2>
 
-			<td>
-				<a th:href="@{'/items/edit/' + ${item.id}}">
-					<button type="button">Update</button>
-				</a>
-				<a th:href="@{'/items/delete/' + ${item.id}}"
-					onclick="return confirm('Are you sure you want to delete this item?');">
-					<button type="button">Delete</button>
-				</a>
-			</td>
-		</tr>
-	</table>
+    <!-- Add Item Button -->
+    <a th:href="@{/items/new}">
+        <button type="button">Add Item</button>
+    </a>
+
+    <br><br>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+            <th>
+                <a th:href="@{/items(sortField='name', sortDir=${reverseSortDir}, page=${currentPage})}">
+                    Name
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/items(sortField='quantity', sortDir=${reverseSortDir}, page=${currentPage})}">
+                    Quantity
+                </a>
+            </th>
+            <th>Actions</th>
+        </tr>
+
+        <tr th:each="item : ${items}">
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td>
+                <a th:href="@{'/items/edit/' + ${item.id}}">
+                    <button type="button">Update</button>
+                </a>
+                <a th:href="@{'/items/delete/' + ${item.id}}"
+                   onclick="return confirm('Are you sure you want to delete this item?');">
+                    <button type="button">Delete</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+
+    <!-- Pagination Controls -->
+    <div>
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/items(page=${i}, sortField=${sortField}, sortDir=${sortDir})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+            &nbsp;
+        </span>
+    </div>
+
 </body>
-
 </html>
