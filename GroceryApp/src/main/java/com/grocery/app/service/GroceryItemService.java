@@ -21,5 +21,14 @@ public class GroceryItemService {
 	    public void saveItem(GroceryItem item) {
 	        groceryItemRepository.save(item);
 	    }
+	    
+	    public GroceryItem getItemById(Long id) {
+	        return groceryItemRepository.findById(id).orElseThrow();
+	    }
+
+	    public void deleteItemById(Long id) {
+	        groceryItemRepository.deleteById(id);
+	    }
+
 
 }

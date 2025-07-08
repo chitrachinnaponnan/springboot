@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.grocery.app.model.GroceryItem;
@@ -33,5 +34,26 @@ public class GroceryController {
 	    groceryItemService.saveItem(item);
 	    return "redirect:/items";
 	}
+	
+	@GetMapping("/items/edit/{id}")
+	public String showUpdateForm(@PathVariable Long id, Model model) {
+	    GroceryItem item = groceryItemService.getItemById(id);
+	    model.addAttribute("item", item);
+	    return "edit-item";
+	}
+	
+	@PostMapping("/items/update")
+	public String updateItem(@ModelAttribute GroceryItem item) {
+	    groceryItemService.saveItem(item);
+	    return "redirect:/items";
+	}
+
+	@GetMapping("/items/delete/{id}")
+	public String deleteItem(@PathVariable Long id) {
+	    groceryItemService.deleteItemById(id);
+	    return "redirect:/items";
+	}
+
+
 
 }
