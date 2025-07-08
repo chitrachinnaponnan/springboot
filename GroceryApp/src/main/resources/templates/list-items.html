@@ -13,7 +13,19 @@
 
     <h2>Grocery Items</h2>
 
-    <!-- Add Item Button -->
+    <!-- 🔍 Search Form -->
+    <form th:action="@{/items}" method="get">
+        <input type="text" name="keyword" placeholder="Search by name" th:value="${keyword}">
+        <button type="submit">Search</button>
+
+        <!-- Keep sorting info in the search request -->
+        <input type="hidden" name="sortField" th:value="${sortField}">
+        <input type="hidden" name="sortDir" th:value="${sortDir}">
+    </form>
+
+    <br>
+
+    <!-- ➕ Add Item Button -->
     <a th:href="@{/items/new}">
         <button type="button">Add Item</button>
     </a>
@@ -23,12 +35,12 @@
     <table border="1" cellpadding="10" cellspacing="0">
         <tr>
             <th>
-                <a th:href="@{/items(sortField='name', sortDir=${reverseSortDir}, page=${currentPage})}">
+                <a th:href="@{/items(sortField='name', sortDir=${reverseSortDir}, page=${currentPage}, keyword=${keyword})}">
                     Name
                 </a>
             </th>
             <th>
-                <a th:href="@{/items(sortField='quantity', sortDir=${reverseSortDir}, page=${currentPage})}">
+                <a th:href="@{/items(sortField='quantity', sortDir=${reverseSortDir}, page=${currentPage}, keyword=${keyword})}">
                     Quantity
                 </a>
             </th>
@@ -52,10 +64,10 @@
 
     <br>
 
-    <!-- Pagination Controls -->
+    <!-- 📄 Pagination Controls -->
     <div>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/items(page=${i}, sortField=${sortField}, sortDir=${sortDir})}"
+            <a th:href="@{/items(page=${i}, sortField=${sortField}, sortDir=${sortDir}, keyword=${keyword})}"
                th:text="${i + 1}"
                th:classappend="${i == currentPage} ? 'active' : ''">1</a>
             &nbsp;

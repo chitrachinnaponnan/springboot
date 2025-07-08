@@ -34,11 +34,16 @@ public class GroceryItemService {
 	        groceryItemRepository.deleteById(id);
 	    }
 
-		public Page<GroceryItem> getPaginatedItems(int page, int size, String sortField, String sortDirection) {
+		public Page<GroceryItem> searchItems(String keyword,int page, int size, String sortField, String sortDirection) {
 	        Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortField).ascending()
                     : Sort.by(sortField).descending();
 	        Pageable pageable = PageRequest.of(page, size,sort);
-	        return groceryItemRepository.findAll(pageable);
+	        
+	        if (keyword == null || keyword.isEmpty()) {
+	            return groceryItemRepository.findAll(pageable);
+	        } else {
+	            return groceryItemRepository.findByNameContainingIgnoreCase(keyword, pageable);
+	        }
 			
 		}
 

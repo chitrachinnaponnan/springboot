@@ -27,18 +27,20 @@ public class GroceryController {
 	}
 	
 	@GetMapping("/items")
-	public String getPaginatedItems(@RequestParam(defaultValue = "0") int page,
+	public String getPaginatedItems(@RequestParam(defaultValue = "") String keyword,
+			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "name") String sortField,
 			@RequestParam(defaultValue = "asc") String sortDirection,Model model) {
 	
-		Page<GroceryItem> gorceryItemPage = groceryItemService.getPaginatedItems(page,size,sortField,sortDirection);
+		Page<GroceryItem> gorceryItemPage = groceryItemService.searchItems(keyword,page,size,sortField,sortDirection);
 		model.addAttribute("items", gorceryItemPage.getContent());
 	    model.addAttribute("currentPage", page);
 	    model.addAttribute("totalPages", gorceryItemPage.getTotalPages());
 	    model.addAttribute("sortField", sortField);
 	    model.addAttribute("sortDir", sortDirection);
 	    model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+	    model.addAttribute("keyword",keyword);
 
 		return "list-items";
 	}
