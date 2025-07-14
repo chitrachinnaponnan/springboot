@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.grocery.app.model.GroceryItem;
 import com.grocery.app.service.GroceryItemService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class GroceryController {
@@ -53,7 +56,11 @@ public class GroceryController {
 	    return "add-item";
 	}
 	@PostMapping("/items")
-	public String addItem(@ModelAttribute GroceryItem item) {
+	public String addItem(@Valid @ModelAttribute GroceryItem item,Model model,BindingResult results) {
+		if (results.hasErrors()) {
+	        return "add-item"; // return to form if validation fails
+	    }
+
 	    groceryItemService.saveItem(item);
 	    return "redirect:/items";
 	}
