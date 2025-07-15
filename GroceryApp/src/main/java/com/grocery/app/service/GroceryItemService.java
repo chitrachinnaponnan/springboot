@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.grocery.app.exception.ItemNotFoundException;
 import com.grocery.app.model.GroceryItem;
 import com.grocery.app.repository.GroceryItemRepository;
 
@@ -27,11 +28,17 @@ public class GroceryItemService {
 	    }
 	    
 	    public GroceryItem getItemById(Long id) {
-	        return groceryItemRepository.findById(id).orElseThrow();
+	    	return groceryItemRepository.findById(id)
+	                .orElseThrow(() -> new ItemNotFoundException("Item not found with ID: " + id));
+
+
 	    }
 
 	    public void deleteItemById(Long id) {
-	        groceryItemRepository.deleteById(id);
+	    	GroceryItem item = groceryItemRepository.findById(id)
+	                .orElseThrow(() -> new ItemNotFoundException("Item not found with ID: " + id));
+	            groceryItemRepository.delete(item);
+
 	    }
 
 		public Page<GroceryItem> searchItems(String keyword,int page, int size, String sortField, String sortDirection) {
