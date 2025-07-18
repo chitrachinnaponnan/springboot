@@ -13,6 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.grocery.app.model.GroceryItem;
 import com.grocery.app.repository.GroceryItemRepository;
@@ -46,11 +51,36 @@ public class GroceryItemServiceTest {
 
 	@Test
     void testSaveItems() {
-		  List<GroceryItem> list = Arrays.asList(groceryItem);
+		 
 		    groceryItemService.saveItem(groceryItem);  // call the method
 
 		    verify(groceryItemRepository).save(groceryItem); // verify that save() was called with the item
 		  
 		  
     }
+	
+	
+	@Test
+	void testSearchItems() {
+		String keyword = "milk";
+	    int page = 0;
+	    int size = 5;
+	    String sortField = "name";
+	    String sortDirection = "asc";
+
+	    GroceryItem item = new GroceryItem();
+	    item.setName("Milk");
+	    Page<GroceryItem> pageResult = new PageImpl<>(List.of(item));
+
+	    Pageable pageable = PageRequest.of(page, size, Sort.by(sortField).ascending());
+
+	    when(groceryItemRepository.findByNameContainingIgnoreCase(keyword, pageable))
+        .thenReturn(pageResult);
+
+    Page<GroceryItem> result = groceryItemService.searchItems(keyword, page, size, sortField, sortDirection);
+
+    assertEquals(1, result.getTotalElements());
+    assertEquals("Milk", result.getContent().get(0).getName());
+
+	}
 }

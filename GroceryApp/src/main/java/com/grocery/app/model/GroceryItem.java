@@ -20,9 +20,16 @@ public class GroceryItem {
     private String name;
     private Integer quantity;
 
-    // Getters and setters
+    public GroceryItem() {
+        // default constructor required by JPA
+    }
 
-    public Long getId() {
+    public GroceryItem(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+	public Long getId() {
         return id;
     }
 
