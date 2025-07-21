@@ -2,6 +2,7 @@ package com.grocery.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,8 @@ public class GroceryController {
 		return "list-items";
 	}
 	
+	
+   
 	@GetMapping("/items")
 	public String getPaginatedItems(@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(defaultValue = "0") int page,
@@ -49,13 +52,14 @@ public class GroceryController {
 	}
 	
 	
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/items/new")
 	public String showAddForm(Model model) {
 	    model.addAttribute("item", new GroceryItem());
 	    return "add-item";
 	}
 	@PostMapping("/items")
+	@PreAuthorize("hasRole('ADMIN')")
 	public String addItem(@Valid @ModelAttribute GroceryItem item,Model model,BindingResult results) {
 		if (results.hasErrors()) {
 	        return "add-item"; // return to form if validation fails
@@ -65,6 +69,7 @@ public class GroceryController {
 	    return "redirect:/items";
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/items/edit/{id}")
 	public String showUpdateForm(@PathVariable Long id, Model model) {
 	    GroceryItem item = groceryItemService.getItemById(id);
@@ -73,12 +78,14 @@ public class GroceryController {
 	}
 	
 	@PostMapping("/items/update")
+	@PreAuthorize("hasRole('ADMIN')")
 	public String updateItem(@ModelAttribute GroceryItem item) {
 	    groceryItemService.saveItem(item);
 	    return "redirect:/items";
 	}
 
 	@GetMapping("/items/delete/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteItem(@PathVariable Long id) {
 	    groceryItemService.deleteItemById(id);
 	    return "redirect:/items";
